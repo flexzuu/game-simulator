@@ -1,16 +1,11 @@
 package basic;
 
-
-import javafx.geometry.Pos;
-import plotter.Sleep;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class JFBR15PlayerAlpha extends Player {
 	Move bestMove = null;
 	int player;
-	int searchDepth = 3;
+	int searchDepth = 1;
 	@Override
 	Move nextMove(Position p, List<Move> moves) {
 		this.player = p.nextPlayer;
@@ -25,10 +20,10 @@ public class JFBR15PlayerAlpha extends Player {
 		int maxValue = alpha;
 		List<Move> moves = p.getMoves();
 		for (Move move:moves) {
-			Position position = new Position(p);
-			position.move(move);
-			position.nextPlayer();
-			int value = min(position, depth - 1, maxValue, beta);
+			p.move(move);
+			p.nextPlayer();
+			int value = min(p, depth - 1, maxValue, beta);
+			p.undo();
 			if(value > maxValue){
 				maxValue = value;
 				if(maxValue >= beta){
@@ -47,10 +42,10 @@ public class JFBR15PlayerAlpha extends Player {
 		int minValue = beta;
 		List<Move> moves = p.getMoves();
 		for (Move move:moves){
-			Position position = new Position(p);
-			position.move(move);
-			position.nextPlayer();
-			int value = max(position, depth - 1 , alpha, minValue);
+			p.move(move);
+			p.nextPlayer();
+			int value = max(p,depth - 1 , alpha, minValue);
+			p.undo();
 			if(value < minValue){
 				minValue = value;
 				if(minValue <= alpha){
